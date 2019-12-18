@@ -55,7 +55,7 @@ import NotificaionItem from './NotificaionItem'
         });*/
 
         
-        // обично читање на податоци од Pusher
+        //читање на податоци од Pusher
 		Echo.private('App.User.' + this.userid)
         .notification((notification) => {
         //console.log(JSON.stringify(notification))
