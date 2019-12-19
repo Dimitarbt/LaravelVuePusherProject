@@ -27,6 +27,7 @@ class HomeController extends Controller
 
         $posts = Post::orderBy('id','desc')->get();
         $users = User::users()->get();
+        
         return view('home', compact('posts', 'users'));
     }
 }

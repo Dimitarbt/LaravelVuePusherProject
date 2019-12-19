@@ -9,7 +9,7 @@ use App\Mail\NewFollowerMail;*/
 use App\Events\NewFollowerEvent;
 use App\Events\NotificationEvent;
 use App\Notifications\newFollower;
-
+use Storage;
 class UsersController extends Controller
 {   
 
@@ -24,6 +24,56 @@ class UsersController extends Controller
     	$users = User::where('id', '!=', auth()->user()->id)->where('id', '!=', $user->id)->get();
 
     	return view('users.show', compact('user', 'users'));
+    }
+
+    public function update(User $user){
+        
+        $data = request()->validate([
+            'name' => 'required',
+            'profile_photo' => 'sometimes|image|max:5000'
+        ]);
+
+        $user->update($data);
+
+        $this->storeImage($user);
+
+        session()->flash('status','Succesfully updated');
+
+        return redirect()->back();
+    }
+
+
+    public function storeImage($user){
+
+         if(request()->has('profile_photo')){
+
+            $image = request()->file('profile_photo');
+
+            $imageName = 'img-'.time().'.'.$image->getClientOriginalExtension();
+
+            $oldPhoto = auth()->user()->profile_photo;
+   
+            if(empty($oldPhoto)){
+                 $user->update([
+                   'profile_photo' => Null,
+                 ]);
+            }
+            else{
+
+               if(file_exists(public_path('/storage/'.$oldPhoto))){
+                    unlink(public_path('/storage/'.$oldPhoto));
+                }
+                
+            }
+
+           $path = $image->storeAs('uploads', $imageName, 'public');
+
+           $user->update([
+                 'profile_photo' => $path,
+           ]);
+            
+        }
+
     }
 
 
@@ -92,56 +142,4 @@ class UsersController extends Controller
     	return view('users.display-all-notifications', compact('notifications', 'users'));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*public function follow(User $user)
-    {   
-        $follower = auth()->user();
-        
-        if ($follower->id == $user->id) {
-            return back()->with('status',"You can't follow yourself");
-        }
-
-        if(!$follower->isFollowing($user->id)) {
-
-            $follower->follow($user->id);
-
-            // sending a notification
-           // $user->notify(new UserFollowed($follower));
-
-            return back()->with('status',"You are now friends with {$user->name}");
-        }
-        return back()->with('status',"You are already following {$user->name}");
-    }*/
 }

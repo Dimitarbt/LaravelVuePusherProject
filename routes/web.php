@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/posts', 'PostController@store')->name('posts.store');
 Route::get('/user/{user}', 'UsersController@show')->name('user.show');
+Route::put('/user/{user}', 'UsersController@update')->name('user.update');
 Route::post('/user/{user}/follow', 'UsersController@follow')->name('user.follow');
 Route::delete('/user/{user}/unfollow', 'UsersController@unfollow')->name('user.unfollow');
 

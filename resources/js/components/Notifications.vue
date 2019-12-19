@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="notifications">
 	<li class="nav-item dropdown" style="margin-right:20px">
  
     <a  href="#"  onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1" data-target="#" style="float: left" aria-expanded="true" class="nav-link">
@@ -82,6 +82,10 @@ import NotificaionItem from './NotificaionItem'
 .dropdown-menu{
 	padding:10px;
 	min-width:250px;
+}
+
+.notifications{
+  min-width:140px;
 }
 
 </style>
